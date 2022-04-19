@@ -8,6 +8,7 @@ public abstract class Connection
   Location locEnd;
   int cellStart;
   int cellEnd;
+  boolean isReverse = false;
 
   Connection(int cellStart, int cellEnd)
   {
@@ -40,5 +41,19 @@ public abstract class Connection
   }
   public double yLocationPercent(int locationCell) {
     return (double) locationCell / GamePane.NUMBER_VERTICAL_CELLS;
+  }
+
+  public boolean isReverse(){
+    return isReverse;
+  }
+  public void doReverse(){
+    this.isReverse = !isReverse;
+    swap(cellStart, cellEnd);
+  }
+
+  private void swap(int a, int b){
+    int temp = a;
+    a = b;
+    b = temp;
   }
 }
