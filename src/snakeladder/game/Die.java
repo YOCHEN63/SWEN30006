@@ -4,14 +4,20 @@ import ch.aplu.jgamegrid.Actor;
 
 public class Die extends Actor
 {
-  private NavigationPane np;
+
   private int nb;
 
-  Die(int nb, NavigationPane np)
+
+  private Pool pool;
+  private int index;
+
+
+  Die(int nb, Pool pool,int index)
   {
     super("sprites/pips" + nb + ".gif", 7);
     this.nb = nb;
-    this.np = np;
+    this.index = index;
+    this.pool = pool;
   }
 
   public void act()
@@ -19,9 +25,17 @@ public class Die extends Actor
     showNextSprite();
     if (getIdVisible() == 6)
     {
+
       setActEnabled(false);
-      np.startMoving(nb);
+      //when rolled dice reach the max of allowed dice
+      //stop rolling and start to move
+      if(index == pool.np.getNumOfDice()){
+        pool.stopRolling();
+      }
+
+
     }
   }
 
 }
+

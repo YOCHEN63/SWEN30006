@@ -21,8 +21,12 @@ public class NavigationPane extends GameGrid
       {
         Monitor.putSleep();
         handBtn.show(1);
-       roll(getDieValue());
-        delay(1000);
+
+       for(int i=0;i<numOfDice;i++){
+         roll(getDieValue());
+         delay(1000);
+       }
+
         handBtn.show(0);
       }
     }
@@ -81,15 +85,24 @@ public class NavigationPane extends GameGrid
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
+  private boolean checking_if_back;
+
+  private int numOfDice;
+
+  public int getNumOfDice(){
+    return numOfDice;
+  }
+
+  private Pool pool = new Pool(this);
 
   NavigationPane(Properties properties)
   {
     this.properties = properties;
-    int numberOfDice =  //Number of six-sided dice
+    this.numOfDice =  //Number of six-sided dice
             (properties.getProperty("dice.count") == null)
                     ? 1  // default
                     : Integer.parseInt(properties.getProperty("dice.count"));
-    System.out.println("numberOfDice = " + numberOfDice);
+    System.out.println("numberOfDice = " + numOfDice);
     isAuto = Boolean.parseBoolean(properties.getProperty("autorun"));
     autoChk = new GGCheckButton("Auto Run", YELLOW, TRANSPARENT, isAuto);
     System.out.println("autorun = " + isAuto);
@@ -279,20 +292,55 @@ public class NavigationPane extends GameGrid
     }
     else
     {
+      int currPuppetIndex = gp.getCurrentPuppetIndex();
+      int i = 0;
       playSound(GGSound.CLICK);
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
       showResult(result);
-      gp.switchToNextPuppet();
-      // System.out.println("current puppet - auto: " + gp.getPuppet().getPuppetName() + "  " + gp.getPuppet().isAuto() );
 
-      if (isAuto) {
-        Monitor.wakeUp();
-      } else if (gp.getPuppet().isAuto()) {
-        Monitor.wakeUp();
-      } else {
-        handBtn.setEnabled(true);
+      //loop for all puppet
+      for(Puppet p : gp.getAllPuppets()){
+        if(i != currPuppetIndex){
+          if(p.getCellIndex() == currentIndex){
+            //if the location of current puppet is the same as any other puppet
+            //which call now, then let now goes back 1 step
+
+            p.go(-1);
+            checking_if_back = true;
+            // switch to next puppet
+            gp.switchToNextPuppet();
+            if (isAuto) {
+              Monitor.wakeUp();
+            } else if (gp.getPuppet().isAuto()) {
+              Monitor.wakeUp();
+            } else {
+              handBtn.setEnabled(true);
+            }
+          }
+
+        }
+        i++;
+
       }
+
+
+      if(checking_if_back == false){
+        //if current puppet has not resulted in any other puppet
+        //goes back , then move normally
+        gp.switchToNextPuppet();
+
+        if (isAuto) {
+          Monitor.wakeUp();
+        } else if (gp.getPuppet().isAuto()) {
+          Monitor.wakeUp();
+        } else {
+          handBtn.setEnabled(true);
+        }
+
+
+      }
+
     }
   }
 
@@ -301,11 +349,19 @@ public class NavigationPane extends GameGrid
     showStatus("Moving...");
     showPips("Pips: " + nb);
     showScore("# Rolls: " + (++nbRolls));
+    //reset the checking_if_back value into false at each roll
+    //thus, it won't interrupt next roll
+    checking_if_back = false;
     gp.getPuppet().go(nb);
   }
 
   void prepareBeforeRoll() {
-    handBtn.setEnabled(false);
+    if(pool.getDiceSize() == numOfDice ){
+      //when player has reached the allowed rolling time
+      //then disable the button
+      handBtn.setEnabled(false);
+    }
+
     if (isGameOver)  // First click after game over
     {
       isGameOver = false;
@@ -330,8 +386,9 @@ public class NavigationPane extends GameGrid
     showPips("");
 
     removeActors(Die.class);
-    Die die = new Die(nb, this);
-    addActor(die, dieBoardLocation);
+    int sizeOfDices = pool.getDiceSize();
+    pool.roll(nb,sizeOfDices);
+    addActor(pool.DieActor(), dieBoardLocation);
   }
 
   public void buttonPressed(GGButton btn)

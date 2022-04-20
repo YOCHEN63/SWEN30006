@@ -15,6 +15,9 @@ public class Puppet extends Actor
   private boolean isAuto;
   private String puppetName;
 
+  private boolean isLowest  = false;
+  private boolean isBack = false;
+
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
     super(puppetImage);
@@ -40,12 +43,19 @@ public class Puppet extends Actor
 
   void go(int nbSteps)
   {
+    this.nbSteps = nbSteps;
     if (cellIndex == 100)  // after game over
     {
       cellIndex = 0;
       setLocation(gamePane.startLocation);
     }
-    this.nbSteps = nbSteps;
+
+
+    if(nbSteps == navigationPane.getNumOfDice()){
+      isLowest = true;
+    }else{
+      isLowest = false;
+    }
     setActEnabled(true);
   }
 
@@ -53,6 +63,10 @@ public class Puppet extends Actor
     cellIndex = 0;
     setLocation(gamePane.startLocation);
     setActEnabled(true);
+  }
+
+  void setNbSteps(int nbSteps){
+    this.nbSteps = nbSteps;
   }
 
   int getCellIndex() {
@@ -80,6 +94,38 @@ public class Puppet extends Actor
     cellIndex++;
   }
 
+   public void movingToCell(int nbSteps){
+    //updating the new location
+     int new_nbSteps;
+     if(nbSteps > 0){
+       //moving forward
+       cellIndex++;
+       new_nbSteps = nbSteps-1;
+       setNbSteps(new_nbSteps);
+     }else if(nbSteps < 0){
+       //moving backward
+       cellIndex--;
+       new_nbSteps = nbSteps+1;
+       setNbSteps(new_nbSteps);
+     }
+     setLocation(GamePane.cellToLocation(cellIndex));
+
+   }
+
+  public boolean checkDownForSnake(){
+    if(!(currentCon.cellEnd-currentCon.cellStart < 0 && isLowest )){
+
+        //if not meeting the start of the snake and its dice count
+        //is not the lowest, the move normally
+        return true;
+
+
+    }
+    //otherwise , it won't  go down
+    return false;
+
+  }
+
   public void act()
   {
     if ((cellIndex / 10) % 2 == 0)
@@ -94,8 +140,9 @@ public class Puppet extends Actor
     }
 
     // Animation: Move on connection
-    if (currentCon != null)
+    if (currentCon != null && nbSteps==0)
     {
+
       int x = gamePane.x(y, currentCon);
       setPixelLocation(new Point(x, y));
       y += dy;
@@ -116,9 +163,9 @@ public class Puppet extends Actor
     }
 
     // Normal movement
-    if (nbSteps > 0)
+    if (nbSteps != 0)
     {
-      moveToNextCell();
+      movingToCell(nbSteps);
 
       if (cellIndex == 100)  // Game over
       {
@@ -127,25 +174,24 @@ public class Puppet extends Actor
         return;
       }
 
-      nbSteps--;
       if (nbSteps == 0)
       {
+
         // Check if on connection start
-        if ((currentCon = gamePane.getConnectionAt(getLocation())) != null)
+        if ((currentCon = gamePane.getConnectionAt(getLocation())) != null && checkDownForSnake())
         {
+          
+
           gamePane.setSimulationPeriod(50);
           y = gamePane.toPoint(currentCon.locStart).y;
           if (currentCon.locEnd.y > currentCon.locStart.y)
             dy = gamePane.animationStep;
           else
             dy = -gamePane.animationStep;
-          if (currentCon instanceof Snake)
-          {
+          if (currentCon instanceof Snake) {
             navigationPane.showStatus("Digesting...");
             navigationPane.playSound(GGSound.MMM);
-          }
-          else
-          {
+          } else {
             navigationPane.showStatus("Climbing...");
             navigationPane.playSound(GGSound.BOING);
           }

@@ -34,6 +34,10 @@ public class GamePane extends GameGrid
     setupPlayers(properties);
     setBgImagePath("sprites/gamepane_snakeladder.png");
   }
+  public int getCurrentPuppetIndex(){
+    //get the current puppet index
+    return this.currentPuppetIndex;
+  }
 
   void setupPlayers(Properties properties) {
     numberOfPlayers = Integer.parseInt(properties.getProperty("players.count"));
