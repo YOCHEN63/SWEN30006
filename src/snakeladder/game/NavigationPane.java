@@ -81,6 +81,8 @@ public class NavigationPane extends GameGrid
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
+  private Recorder player1Recorder = new Recorder(1);
+  private Recorder player2Recorder = new Recorder(2);
 
   NavigationPane(Properties properties)
   {
