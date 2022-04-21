@@ -7,6 +7,7 @@ import snakeladder.game.custom.CustomGGButton;
 import snakeladder.utility.ServicesRandom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 @SuppressWarnings("serial")
@@ -81,8 +82,7 @@ public class NavigationPane extends GameGrid
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
-  private Recorder player1Recorder = new Recorder(1);
-  private Recorder player2Recorder = new Recorder(2);
+  private HashMap<Integer,Recorder> playerRecorder = new HashMap<>();
 
   NavigationPane(Properties properties)
   {
