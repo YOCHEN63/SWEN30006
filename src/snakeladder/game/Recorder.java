@@ -4,20 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Recorder {
-    private int playerIndex;
-    private HashMap<Integer, Integer> playerData = new HashMap<>();
+    private HashMap<Integer, Integer> rollData = new HashMap<>();
     private int isUp = 0;
     private int isDown = 0;
 
-    public Recorder(int playerIndex){
-        this.playerIndex = playerIndex;
-    }
     public void count(Integer value){
-        if(playerData.containsKey(value)){
-            Integer oldValue = playerData.get(value);
-            playerData.replace(value, oldValue + 1);
+        if(rollData.containsKey(value)){
+            Integer oldValue = rollData.get(value);
+            rollData.replace(value, oldValue + 1);
         } else {
-            playerData.put(value, 1);
+            rollData.put(value, 1);
         }
     }
 
@@ -29,12 +25,12 @@ public class Recorder {
         isDown += 1;
     }
 
-    public void printToString(){
-        System.out.print("Player"+playerIndex+" rolled: ");
-        for(Integer key : playerData.keySet()){
-            System.out.print(key+"-"+playerData.get(key));
-        }
-        System.out.print("\n");
-        System.out.println("Player "+playerIndex+" traversed: up-"+isUp+" down-"+isDown);
-    }
+//    public void printToString(){
+//        System.out.print("Player"+playerIndex+" rolled: ");
+//        for(Integer key : rollData.keySet()){
+//            System.out.print(key+"-"+rollData.get(key));
+//        }
+//        System.out.print("\n");
+//        System.out.println("Player "+playerIndex+" traversed: up-"+isUp+" down-"+isDown);
+//    }
 }

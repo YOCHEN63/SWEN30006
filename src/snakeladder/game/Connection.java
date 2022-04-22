@@ -48,12 +48,9 @@ public abstract class Connection
   }
   public void doReverse(){
     this.isReverse = !isReverse;
-    swap(cellStart, cellEnd);
+    int tempCell = this.cellStart;
+    cellStart = cellEnd;
+    cellEnd = tempCell;
   }
 
-  private void swap(int a, int b){
-    int temp = a;
-    a = b;
-    b = temp;
-  }
 }

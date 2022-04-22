@@ -2,6 +2,7 @@ package snakeladder.game;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.Point;
+import java.util.HashMap;
 
 public class Puppet extends Actor
 {
@@ -14,6 +15,7 @@ public class Puppet extends Actor
   private int dy;
   private boolean isAuto;
   private String puppetName;
+  private HashMap<String, Recorder> gameData = new HashMap<>();
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
@@ -82,6 +84,7 @@ public class Puppet extends Actor
 
   public void act()
   {
+    Recorder recorder = new Recorder();
     if ((cellIndex / 10) % 2 == 0)
     {
       if (isHorzMirror())
@@ -139,15 +142,17 @@ public class Puppet extends Actor
             dy = gamePane.animationStep;
           else
             dy = -gamePane.animationStep;
-          if (currentCon instanceof Snake)
+          if (currentCon instanceof Snake && !currentCon.isReverse() || (currentCon instanceof Ladder && currentCon.isReverse()))
           {
             navigationPane.showStatus("Digesting...");
             navigationPane.playSound(GGSound.MMM);
+            recorder.isDown();
           }
           else
           {
             navigationPane.showStatus("Climbing...");
             navigationPane.playSound(GGSound.BOING);
+            recorder.isUp();
           }
         }
         else
