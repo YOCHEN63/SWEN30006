@@ -51,6 +51,9 @@ public abstract class Connection
     int tempCell = this.cellStart;
     cellStart = cellEnd;
     cellEnd = tempCell;
+    Location tempLoc = locStart;
+    locStart = locEnd;
+    locEnd = tempLoc;
   }
 
 }
