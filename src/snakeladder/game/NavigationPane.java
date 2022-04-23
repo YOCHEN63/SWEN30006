@@ -104,6 +104,12 @@ public class NavigationPane extends GameGrid
     new SimulatedPlayer().start();
   }
 
+  int getDiceCount(){
+    return (properties.getProperty("dice.count") == null)
+            ? 1  // default
+            : Integer.parseInt(properties.getProperty("dice.count"));
+  }
+
   void setupDieValues() {
     for (int i = 0; i < gp.getNumberOfPlayers(); i++) {
       java.util.List<Integer> dieValuesForPlayer = new ArrayList<>();
@@ -275,6 +281,9 @@ public class NavigationPane extends GameGrid
       java.util.List  <String> playerPositions = new ArrayList<>();
       for (Puppet puppet: gp.getAllPuppets()) {
         playerPositions.add(puppet.getCellIndex() + "");
+      }
+      for(Puppet puppet : gp.getAllPuppets()){
+        System.out.println(puppet.toString());
       }
       gamePlayCallback.finishGameWithResults(nbRolls % gp.getNumberOfPlayers(), playerPositions);
       gp.resetAllPuppets();

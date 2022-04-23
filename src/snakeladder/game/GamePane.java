@@ -23,8 +23,6 @@ public class GamePane extends GameGrid
   public static final int NUMBER_HORIZONTAL_CELLS = 10;
   public static final int NUMBER_VERTICAL_CELLS = 10;
   private final int MAX_PUPPET_SPRITES = 4;
-  private HashMap<String, Recorder> gameData = new HashMap<>();
-  Recorder recorder = new Recorder();
 
   GamePane(Properties properties)
   {
@@ -148,4 +146,12 @@ public class GamePane extends GameGrid
   private void reverse(){
     this.isReversed = !this.isReversed;
   }
+
+  public int getCurrentPuppetIndex() {
+    return currentPuppetIndex;
+  }
+
+  public void getDieValue(){
+  }
+
 }
