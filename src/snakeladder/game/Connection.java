@@ -8,7 +8,7 @@ public abstract class Connection
   Location locEnd;
   int cellStart;
   int cellEnd;
-  boolean isReverse = false;
+  private boolean isReverse = false;
 
   Connection(int cellStart, int cellEnd)
   {

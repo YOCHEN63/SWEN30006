@@ -4,6 +4,7 @@ import ch.aplu.jgamegrid.*;
 import snakeladder.utility.PropertiesLoader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -16,11 +17,14 @@ public class GamePane extends GameGrid
   private List<Puppet> puppets =  new ArrayList<>();
   private List<Boolean> playerManualMode;
   private ArrayList<Connection> connections = new ArrayList<Connection>();
+  private boolean isReversed = false;
   final Location startLocation = new Location(-1, 9);  // outside grid
   final int animationStep = 10;
   public static final int NUMBER_HORIZONTAL_CELLS = 10;
   public static final int NUMBER_VERTICAL_CELLS = 10;
   private final int MAX_PUPPET_SPRITES = 4;
+  private HashMap<String, Recorder> gameData = new HashMap<>();
+  Recorder recorder = new Recorder();
 
   GamePane(Properties properties)
   {
@@ -134,6 +138,14 @@ public class GamePane extends GameGrid
     for(Connection connection: connections){
       connection.doReverse();
     }
+    reverse();
   }
 
+  public boolean isReversed() {
+    return isReversed;
+  }
+
+  private void reverse(){
+    this.isReversed = !this.isReversed;
+  }
 }

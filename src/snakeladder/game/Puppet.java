@@ -146,13 +146,13 @@ public class Puppet extends Actor
           {
             navigationPane.showStatus("Digesting...");
             navigationPane.playSound(GGSound.MMM);
-            recorder.isDown();
+            gamePane.recorder.isDown();
           }
           else
           {
             navigationPane.showStatus("Climbing...");
             navigationPane.playSound(GGSound.BOING);
-            recorder.isUp();
+            gamePane.recorder.isUp();
           }
         }
         else

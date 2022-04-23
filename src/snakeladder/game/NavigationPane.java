@@ -285,11 +285,9 @@ public class NavigationPane extends GameGrid
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
       showResult(result);
-      if(isToggle){
+      if(isToggle && !gp.isReversed() || !isToggle && gp.isReversed()){
         gp.reverseAllConnections();
-        isToggle = false;
       }
-      // TODO check toggle and do the reverse
       gp.switchToNextPuppet();
       // System.out.println("current puppet - auto: " + gp.getPuppet().getPuppetName() + "  " + gp.getPuppet().isAuto() );
 
