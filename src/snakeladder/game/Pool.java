@@ -7,13 +7,19 @@ public class Pool {
     private List<Die> listOfDie;
 
     private int totalRolled = 0;
-    public NavigationPane np;
+    private NavigationPane np;
 
     public Pool(NavigationPane np){
         this.np = np;
         this.listOfDie = new ArrayList<>();
 
     }
+
+    public NavigationPane getNp(){
+        return this.np;
+    }
+
+
     public int getDiceSize(){
         //get the size of Die list
         return listOfDie.size();

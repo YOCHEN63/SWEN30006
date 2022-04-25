@@ -49,15 +49,10 @@ public class Puppet extends Actor
       cellIndex = 0;
       setLocation(gamePane.startLocation);
     }
-
-
-    if(nbSteps == navigationPane.getNumOfDice()){
-      isLowest = true;
-    }else{
-      isLowest = false;
-    }
+    checkLowest(nbSteps);
     setActEnabled(true);
   }
+
 
   void resetToStartingPoint() {
     cellIndex = 0;
@@ -69,9 +64,21 @@ public class Puppet extends Actor
     this.nbSteps = nbSteps;
   }
 
+  void checkLowest(int nbSteps){
+    if(nbSteps == navigationPane.getNumOfDice()){
+      this.isLowest = true;
+    }else{
+      this.isLowest = false;
+    }
+  }
+
   int getCellIndex() {
     return cellIndex;
   }
+
+  /*
+
+  //no need to use this method
 
   private void moveToNextCell()
   {
@@ -93,8 +100,10 @@ public class Puppet extends Actor
     }
     cellIndex++;
   }
+  */
 
-   public void movingToCell(int nbSteps){
+
+   private void movingToCell(int nbSteps){
     //updating the new location
      int new_nbSteps;
      if(nbSteps > 0){
@@ -112,7 +121,7 @@ public class Puppet extends Actor
 
    }
 
-  public boolean checkDownForSnake(){
+  private boolean checkDownForSnake(){
     if(!(currentCon.cellEnd-currentCon.cellStart < 0 && isLowest )){
 
         //if not meeting the start of the snake and its dice count

@@ -307,6 +307,7 @@ public class NavigationPane extends GameGrid
             //which call now, then let now goes back 1 step
 
             p.go(-1);
+
             checking_if_back = true;
             // switch to next puppet
             gp.switchToNextPuppet();

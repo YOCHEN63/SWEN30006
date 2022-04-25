@@ -29,7 +29,8 @@ public class Die extends Actor
       setActEnabled(false);
       //when rolled dice reach the max of allowed dice
       //stop rolling and start to move
-      if(index == pool.np.getNumOfDice()){
+
+      if(index == pool.getNp().getNumOfDice()){
         pool.stopRolling();
       }
 
