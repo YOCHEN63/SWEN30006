@@ -89,7 +89,7 @@ public class NavigationPane extends GameGrid
 
   private int numOfDice;
 
-  public int getNumOfDice(){
+  int getNumOfDice(){
     return numOfDice;
   }
 
