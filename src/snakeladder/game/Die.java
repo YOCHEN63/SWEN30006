@@ -4,7 +4,7 @@ import ch.aplu.jgamegrid.Actor;
 
 public class Die extends Actor
 {
-
+  private NavigationPane np;
   private int nb;
 
 

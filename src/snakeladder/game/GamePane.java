@@ -151,9 +151,7 @@ public class GamePane extends GameGrid
     this.isReversed = !this.isReversed;
   }
 
-  public int getCurrentPuppetIndex() {
-    return currentPuppetIndex;
-  }
+
 
   public void getDieValue(){
   }

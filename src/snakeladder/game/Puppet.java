@@ -14,7 +14,7 @@ public class Puppet extends Actor
   private int dy;
   private boolean isAuto;
   private String puppetName;
-
+  private Recorder playerData;
   private boolean isLowest  = false;
   private boolean isBack = false;
 
@@ -23,6 +23,7 @@ public class Puppet extends Actor
     super(puppetImage);
     this.gamePane = gp;
     this.navigationPane = np;
+    this.playerData = new Recorder(np.getDiceCount());
   }
 
   public boolean isAuto() {
@@ -49,7 +50,8 @@ public class Puppet extends Actor
       cellIndex = 0;
       setLocation(gamePane.startLocation);
     }
-
+    this.nbSteps = nbSteps;
+    playerData.count(nbSteps);
 
     if(nbSteps == navigationPane.getNumOfDice()){
       isLowest = true;
@@ -188,12 +190,15 @@ public class Puppet extends Actor
             dy = gamePane.animationStep;
           else
             dy = -gamePane.animationStep;
-          if (currentCon instanceof Snake) {
+          if (currentCon instanceof Snake && !currentCon.isReverse() || (currentCon instanceof Ladder && currentCon.isReverse()))
+          {
             navigationPane.showStatus("Digesting...");
             navigationPane.playSound(GGSound.MMM);
+            playerData.isDown();
           } else {
             navigationPane.showStatus("Climbing...");
             navigationPane.playSound(GGSound.BOING);
+            playerData.isUp();
           }
         }
         else
@@ -204,5 +209,12 @@ public class Puppet extends Actor
       }
     }
   }
+
+  @Override
+  public String toString(){
+    return puppetName + "rolled: " + playerData.rollData() + "\n"
+            + puppetName + "traversed: " + playerData.traversalData();
+  }
+  // 重写toString方法增加易读性
 
 }

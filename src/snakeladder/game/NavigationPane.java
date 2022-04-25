@@ -7,6 +7,7 @@ import snakeladder.game.custom.CustomGGButton;
 import snakeladder.utility.ServicesRandom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 @SuppressWarnings("serial")
@@ -85,6 +86,7 @@ public class NavigationPane extends GameGrid
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
+  private HashMap<Integer,Recorder> playerRecorder = new HashMap<>();
   private boolean checking_if_back;
 
   private int numOfDice;
@@ -113,6 +115,12 @@ public class NavigationPane extends GameGrid
     setNbVertCells(600);
     doRun();
     new SimulatedPlayer().start();
+  }
+
+  int getDiceCount(){
+    return (properties.getProperty("dice.count") == null)
+            ? 1  // default
+            : Integer.parseInt(properties.getProperty("dice.count"));
   }
 
   void setupDieValues() {
