@@ -46,7 +46,8 @@ public class Pool {
     }
 
     public ch.aplu.jgamegrid.Actor DieActor(){
-        return this.listOfDie.get(this.listOfDie.size()-1);
+
+        return this.listOfDie.get(this.getDiceSize()-1);
     }
 
 }
