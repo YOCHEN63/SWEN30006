@@ -290,8 +290,9 @@ public class NavigationPane extends GameGrid
       showStatus("Click the hand!");
       showResult("Game over");
       isGameOver = true;
-      handBtn.setEnabled(true);
-
+      if (isAuto == false) {
+        handBtn.setEnabled(true);
+      }
       java.util.List  <String> playerPositions = new ArrayList<>();
       for (Puppet puppet: gp.getAllPuppets()) {
         playerPositions.add(puppet.getCellIndex() + "");
