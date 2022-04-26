@@ -16,7 +16,7 @@ public class Puppet extends Actor
   private String puppetName;
 
   private boolean isLowest  = false;
-  private boolean isBack = false;
+
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {

@@ -159,13 +159,16 @@ public class NavigationPane extends GameGrid
 
     @Override
     public void buttonClicked(GGButton ggButton) {
-      System.out.println("manual die button clicked");
-      if (ggButton instanceof CustomGGButton) {
-        CustomGGButton customGGButton = (CustomGGButton) ggButton;
-        int tag = customGGButton.getTag();
-        System.out.println("manual die button clicked - tag: " + tag);
-        prepareBeforeRoll();
-        roll(tag);
+      if(isAuto == false){
+        System.out.println("manual die button clicked");
+        if (ggButton instanceof CustomGGButton) {
+          CustomGGButton customGGButton = (CustomGGButton) ggButton;
+          int tag = customGGButton.getTag();
+          System.out.println("manual die button clicked - tag: " + tag);
+          prepareBeforeRoll();
+          roll(tag);
+        }
+
       }
     }
   }
@@ -319,8 +322,10 @@ public class NavigationPane extends GameGrid
             gp.switchToNextPuppet();
             if (isAuto) {
               Monitor.wakeUp();
+              handBtn.setEnabled(false);
             } else if (gp.getPuppet().isAuto()) {
               Monitor.wakeUp();
+              handBtn.setEnabled(false);
             } else {
               handBtn.setEnabled(true);
             }
@@ -339,8 +344,10 @@ public class NavigationPane extends GameGrid
 
         if (isAuto) {
           Monitor.wakeUp();
+          handBtn.setEnabled(false);
         } else if (gp.getPuppet().isAuto()) {
           Monitor.wakeUp();
+          handBtn.setEnabled(false);
         } else {
           handBtn.setEnabled(true);
         }
