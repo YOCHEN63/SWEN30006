@@ -12,7 +12,7 @@ import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class NavigationPane extends GameGrid
-  implements GGButtonListener, ToggleMode
+  implements GGButtonListener
 {
   private class SimulatedPlayer extends Thread
   {
@@ -87,7 +87,7 @@ public class NavigationPane extends GameGrid
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
   private boolean checking_if_back;
-
+  private AutoToggle autoToggle;
   private final int numOfDice;
 
   public int getNumOfDice(){
@@ -115,7 +115,7 @@ public class NavigationPane extends GameGrid
     doRun();
     new SimulatedPlayer().start();
   }
-
+  // get the dice count for the recorder and autoToggle function
   int getDiceCount(){
     return (properties.getProperty("dice.count") == null)
             ? 1  // default
@@ -194,15 +194,18 @@ public class NavigationPane extends GameGrid
   }
 
   private int getDieValue() {
+    //let die get the value as die_value required
+    int playerIndex = nbRolls % gp.getNumberOfPlayers();
     if (dieValues == null) {
       return RANDOM_ROLL_TAG;
+
+    }else if(dieValues.get(playerIndex).size() == 0){
+
+      return RANDOM_ROLL_TAG;
+    } else{
+
+      return dieValues.get(playerIndex).remove(0);
     }
-    int currentRound = nbRolls / gp.getNumberOfPlayers();
-    int playerIndex = nbRolls % gp.getNumberOfPlayers();
-    if (dieValues.get(playerIndex).size() > currentRound) {
-      return dieValues.get(playerIndex).get(currentRound);
-    }
-    return RANDOM_ROLL_TAG;
   }
 
   void createGui()
@@ -294,6 +297,10 @@ public class NavigationPane extends GameGrid
       for (Puppet puppet: gp.getAllPuppets()) {
         playerPositions.add(puppet.getCellIndex() + "");
       }
+      // print the whole game data at end of the game
+      for(Puppet puppet : gp.getAllPuppets()){
+        System.out.println(puppet.toString());
+      }
       gamePlayCallback.finishGameWithResults(nbRolls % gp.getNumberOfPlayers(), playerPositions);
       gp.resetAllPuppets();
     }
@@ -305,7 +312,9 @@ public class NavigationPane extends GameGrid
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
       showResult(result);
-
+      if(isToggle && !gp.isReversed() || !isToggle && gp.isReversed()){
+        gp.reverseAllConnections();
+      }
       //loop for all puppet
       for(Puppet p : gp.getAllPuppets()){
         if(i != currPuppetIndex){
@@ -315,8 +324,9 @@ public class NavigationPane extends GameGrid
 
             p.go(-1);
             checking_if_back = true;
+            // check auto individually to do the reverse, make code easy to make change
             if(isAuto){
-              autoToggle();
+              autoToggle.autoToggle(numOfDice,gp,isToggle,toggleCheck);
             }
             // switch to next puppet
             gp.switchToNextPuppet();
@@ -347,10 +357,7 @@ public class NavigationPane extends GameGrid
         } else {
           handBtn.setEnabled(true);
         }
-
-
       }
-
     }
   }
 
@@ -411,30 +418,5 @@ public class NavigationPane extends GameGrid
 
   public void checkAuto() {
     if (isAuto) Monitor.wakeUp();
-  }
-
-  @Override
-  public void autoToggle() {
-    int nextPuppetCellIndex = gp.getNextPuppet().getCellIndex();
-    int upCount = 0;
-    int downCount = 0;
-    for (int i = nextPuppetCellIndex; i <= numOfDice * 6 + nextPuppetCellIndex; i++) {
-      for (Connection connection : gp.getConnections()) {
-        if (i == connection.cellStart &&
-                ((connection instanceof Snake && !connection.isReverse()) ||
-                        (connection instanceof Ladder && connection.isReverse()))) {
-          downCount += 1;
-        } else if (i == connection.cellStart &&
-                ((connection instanceof Snake && connection.isReverse()) ||
-                        (connection instanceof Ladder && !connection.isReverse()))) {
-          upCount += 1;
-        }
-      }
-    }
-    if (downCount < upCount) {
-      gp.reverseAllConnections();
-      isToggle = !isToggle;
-      toggleCheck.setChecked(isToggle);
-    }
   }
 }

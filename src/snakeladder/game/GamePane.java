@@ -17,6 +17,7 @@ public class GamePane extends GameGrid
   private List<Puppet> puppets =  new ArrayList<>();
   private List<Boolean> playerManualMode;
   private ArrayList<Connection> connections = new ArrayList<Connection>();
+  // record the all connections are reversed
   private boolean isReversed = false;
   final Location startLocation = new Location(-1, 9);  // outside grid
   final int animationStep = 10;
@@ -135,7 +136,7 @@ public class GamePane extends GameGrid
     double b = (double)(y1 * x0 - y0 * x1) / (y1 - y0);
     return (int)(a * y + b);
   }
-  // loop whole connections to use doReverse method to reverse all
+  // loop whole connections to use doReverse method to reverse all connection
   void reverseAllConnections(){
     for(Connection connection: connections){
       connection.doReverse();

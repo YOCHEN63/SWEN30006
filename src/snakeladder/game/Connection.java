@@ -8,7 +8,6 @@ public abstract class Connection
   Location locEnd;
   int cellStart;
   int cellEnd;
-  private boolean isReverse = false;
 
   Connection(int cellStart, int cellEnd)
   {
@@ -43,11 +42,9 @@ public abstract class Connection
     return (double) locationCell / GamePane.NUMBER_VERTICAL_CELLS;
   }
 
-  public boolean isReverse(){
-    return isReverse;
-  }
+
+  // reverse all property of the connection and inherit to the snake and ladder
   public void doReverse(){
-    this.isReverse = !isReverse;
     int tempCell = this.cellStart;
     cellStart = cellEnd;
     cellEnd = tempCell;

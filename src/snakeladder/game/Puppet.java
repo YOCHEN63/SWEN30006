@@ -14,6 +14,7 @@ public class Puppet extends Actor
   private int dy;
   private boolean isAuto;
   private String puppetName;
+  // save game data in the puppet class
   private Recorder playerData;
   private boolean isLowest  = false;
   private boolean isBack = false;
@@ -190,7 +191,10 @@ public class Puppet extends Actor
             dy = gamePane.animationStep;
           else
             dy = -gamePane.animationStep;
-          if (currentCon instanceof Snake && !currentCon.isReverse() || (currentCon instanceof Ladder && currentCon.isReverse()))
+          /* because we have reverse function, we need to check if is reversed and record the connection is up or down
+             and save in variable recorder.
+          * */
+          if (currentCon instanceof Snake && !gamePane.isReversed() || (currentCon instanceof Ladder && gamePane.isReversed()))
           {
             navigationPane.showStatus("Digesting...");
             navigationPane.playSound(GGSound.MMM);
@@ -215,6 +219,5 @@ public class Puppet extends Actor
     return puppetName + "rolled: " + playerData.rollData() + "\n"
             + puppetName + "traversed: " + playerData.traversalData();
   }
-  // 重写toString方法增加易读性
 
 }
