@@ -135,7 +135,7 @@ public class GamePane extends GameGrid
     double b = (double)(y1 * x0 - y0 * x1) / (y1 - y0);
     return (int)(a * y + b);
   }
-
+  // loop whole connections to use doReverse method to reverse all
   void reverseAllConnections(){
     for(Connection connection: connections){
       connection.doReverse();
