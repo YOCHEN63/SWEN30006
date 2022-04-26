@@ -194,7 +194,7 @@ public class NavigationPane extends GameGrid
     if (dieValues == null) {
       return RANDOM_ROLL_TAG;
 
-    }else if(dieValues.get(playerIndex) == null){
+    }else if(dieValues.get(playerIndex).size() == 0){
 
       return RANDOM_ROLL_TAG;
     } else{
