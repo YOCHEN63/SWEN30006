@@ -151,9 +151,15 @@ public class GamePane extends GameGrid
     this.isReversed = !this.isReversed;
   }
 
-
+  public Puppet getNextPuppet(){
+    return puppets.get((currentPuppetIndex + 1) % numberOfPlayers);
+  }
 
   public void getDieValue(){
+  }
+
+  public ArrayList<Connection> getConnections(){
+    return connections;
   }
 
 }

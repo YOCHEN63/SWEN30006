@@ -12,7 +12,7 @@ import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class NavigationPane extends GameGrid
-  implements GGButtonListener
+  implements GGButtonListener, ToggleMode
 {
   private class SimulatedPlayer extends Thread
   {
@@ -86,10 +86,9 @@ public class NavigationPane extends GameGrid
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
-  private HashMap<Integer,Recorder> playerRecorder = new HashMap<>();
   private boolean checking_if_back;
 
-  private int numOfDice;
+  private final int numOfDice;
 
   public int getNumOfDice(){
     return numOfDice;
@@ -316,6 +315,9 @@ public class NavigationPane extends GameGrid
 
             p.go(-1);
             checking_if_back = true;
+            if(isAuto){
+              autoToggle();
+            }
             // switch to next puppet
             gp.switchToNextPuppet();
             if (isAuto) {
@@ -409,5 +411,30 @@ public class NavigationPane extends GameGrid
 
   public void checkAuto() {
     if (isAuto) Monitor.wakeUp();
+  }
+
+  @Override
+  public void autoToggle() {
+    int nextPuppetCellIndex = gp.getNextPuppet().getCellIndex();
+    int upCount = 0;
+    int downCount = 0;
+    for (int i = nextPuppetCellIndex; i <= numOfDice * 6 + nextPuppetCellIndex; i++) {
+      for (Connection connection : gp.getConnections()) {
+        if (i == connection.cellStart &&
+                ((connection instanceof Snake && !connection.isReverse()) ||
+                        (connection instanceof Ladder && connection.isReverse()))) {
+          downCount += 1;
+        } else if (i == connection.cellStart &&
+                ((connection instanceof Snake && connection.isReverse()) ||
+                        (connection instanceof Ladder && !connection.isReverse()))) {
+          upCount += 1;
+        }
+      }
+    }
+    if (downCount < upCount) {
+      gp.reverseAllConnections();
+      isToggle = !isToggle;
+      toggleCheck.setChecked(isToggle);
+    }
   }
 }

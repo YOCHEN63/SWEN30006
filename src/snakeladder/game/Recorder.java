@@ -19,6 +19,9 @@ public class Recorder {
     }
 
     public void count(Integer value){
+        if(value == -1){
+            return;
+        }
         Integer oldValue = rollData.get(value);
         rollData.replace(value, oldValue + 1);
 
