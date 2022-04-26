@@ -7,6 +7,7 @@ import snakeladder.game.custom.CustomGGButton;
 import snakeladder.utility.ServicesRandom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 @SuppressWarnings("serial")
@@ -81,6 +82,7 @@ public class NavigationPane extends GameGrid
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
+  private HashMap<Integer,Recorder> playerRecorder = new HashMap<>();
 
   NavigationPane(Properties properties)
   {
@@ -100,6 +102,12 @@ public class NavigationPane extends GameGrid
     setNbVertCells(600);
     doRun();
     new SimulatedPlayer().start();
+  }
+
+  int getDiceCount(){
+    return (properties.getProperty("dice.count") == null)
+            ? 1  // default
+            : Integer.parseInt(properties.getProperty("dice.count"));
   }
 
   void setupDieValues() {
@@ -274,6 +282,9 @@ public class NavigationPane extends GameGrid
       for (Puppet puppet: gp.getAllPuppets()) {
         playerPositions.add(puppet.getCellIndex() + "");
       }
+      for(Puppet puppet : gp.getAllPuppets()){
+        System.out.println(puppet.toString());
+      }
       gamePlayCallback.finishGameWithResults(nbRolls % gp.getNumberOfPlayers(), playerPositions);
       gp.resetAllPuppets();
     }
@@ -283,6 +294,9 @@ public class NavigationPane extends GameGrid
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
       showResult(result);
+      if(isToggle && !gp.isReversed() || !isToggle && gp.isReversed()){
+        gp.reverseAllConnections();
+      }
       gp.switchToNextPuppet();
       // System.out.println("current puppet - auto: " + gp.getPuppet().getPuppetName() + "  " + gp.getPuppet().isAuto() );
 

@@ -2,6 +2,7 @@ package snakeladder.game;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.Point;
+import java.util.HashMap;
 
 public class Puppet extends Actor
 {
@@ -14,12 +15,15 @@ public class Puppet extends Actor
   private int dy;
   private boolean isAuto;
   private String puppetName;
+  private Recorder playerData;
+  // 数据记录储存在玩家类里更直观
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
     super(puppetImage);
     this.gamePane = gp;
     this.navigationPane = np;
+    this.playerData = new Recorder(np.getDiceCount());
   }
 
   public boolean isAuto() {
@@ -46,6 +50,7 @@ public class Puppet extends Actor
       setLocation(gamePane.startLocation);
     }
     this.nbSteps = nbSteps;
+    playerData.count(nbSteps);
     setActEnabled(true);
   }
 
@@ -139,15 +144,17 @@ public class Puppet extends Actor
             dy = gamePane.animationStep;
           else
             dy = -gamePane.animationStep;
-          if (currentCon instanceof Snake)
+          if (currentCon instanceof Snake && !currentCon.isReverse() || (currentCon instanceof Ladder && currentCon.isReverse()))
           {
             navigationPane.showStatus("Digesting...");
             navigationPane.playSound(GGSound.MMM);
+            playerData.isDown();
           }
           else
           {
             navigationPane.showStatus("Climbing...");
             navigationPane.playSound(GGSound.BOING);
+            playerData.isUp();
           }
         }
         else
@@ -158,5 +165,12 @@ public class Puppet extends Actor
       }
     }
   }
+
+  @Override
+  public String toString(){
+    return puppetName + "rolled: " + playerData.rollData() + "\n"
+            + puppetName + "traversed: " + playerData.traversalData();
+  }
+  // 重写toString方法增加易读性
 
 }
