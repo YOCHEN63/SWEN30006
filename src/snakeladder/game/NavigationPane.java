@@ -21,7 +21,7 @@ public class NavigationPane extends GameGrid
       {
         Monitor.putSleep();
         handBtn.show(1);
-
+        handBtn.setEnabled(false);
        for(int i=0;i<numOfDice;i++){
          roll(getDieValue());
          delay(1000);
@@ -290,9 +290,7 @@ public class NavigationPane extends GameGrid
       showStatus("Click the hand!");
       showResult("Game over");
       isGameOver = true;
-      if (isAuto == false) {
-        handBtn.setEnabled(true);
-      }
+      handBtn.setEnabled(true);
       java.util.List  <String> playerPositions = new ArrayList<>();
       for (Puppet puppet: gp.getAllPuppets()) {
         playerPositions.add(puppet.getCellIndex() + "");
