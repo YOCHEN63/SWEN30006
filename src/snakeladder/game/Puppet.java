@@ -161,6 +161,7 @@ public class Puppet extends Actor
         cellIndex = currentCon.cellEnd;
         setLocationOffset(new Point(0, 0));
         currentCon = null;
+        // check auto individually to do the reverse, make code easy to make change
         navigationPane.prepareRoll(cellIndex);
       }
       return;
@@ -180,7 +181,6 @@ public class Puppet extends Actor
 
       if (nbSteps == 0)
       {
-        // check auto individually to do the reverse, make code easy to make change
 
 
         // Check if on connection start
@@ -210,9 +210,6 @@ public class Puppet extends Actor
         }
         else
         {
-          if(isAuto){
-            autoToggle.autoToggle(navigationPane, gamePane);
-          }
           setActEnabled(false);
           navigationPane.prepareRoll(cellIndex);
         }
@@ -220,10 +217,16 @@ public class Puppet extends Actor
     }
   }
 
+  public void autoToggle(){
+    if(isAuto){
+      autoToggle.autoToggle(navigationPane, gamePane);
+    }
+  }
+
   @Override
   public String toString(){
-    return puppetName + "rolled: " + playerData.rollData() + "\n"
-            + puppetName + "traversed: " + playerData.traversalData();
+    return puppetName + " rolled: " + playerData.rollData() + "\n"
+            + puppetName + " traversed: " + playerData.traversalData();
   }
 
 }
