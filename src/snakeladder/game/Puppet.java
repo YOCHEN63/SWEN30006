@@ -66,7 +66,7 @@ public class Puppet extends Actor
   void resetToStartingPoint() {
     cellIndex = 0;
     setLocation(gamePane.startLocation);
-    setActEnabled(true);
+    setActEnabled(false);
   }
 
   void setNbSteps(int nbSteps){
@@ -161,7 +161,6 @@ public class Puppet extends Actor
         cellIndex = currentCon.cellEnd;
         setLocationOffset(new Point(0, 0));
         currentCon = null;
-        // check auto individually to do the reverse, make code easy to make change
         navigationPane.prepareRoll(cellIndex);
       }
       return;
@@ -186,8 +185,6 @@ public class Puppet extends Actor
         // Check if on connection start
         if ((currentCon = gamePane.getConnectionAt(getLocation())) != null && checkDownForSnake())
         {
-          
-
           gamePane.setSimulationPeriod(50);
           y = gamePane.toPoint(currentCon.locStart).y;
           if (currentCon.locEnd.y > currentCon.locStart.y)
