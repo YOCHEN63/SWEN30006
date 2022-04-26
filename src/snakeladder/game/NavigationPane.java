@@ -87,6 +87,7 @@ public class NavigationPane extends GameGrid
   private GamePlayCallback gamePlayCallback;
   private boolean checking_if_back;
 
+
   private int numOfDice;
 
   int getNumOfDice(){
@@ -186,16 +187,21 @@ public class NavigationPane extends GameGrid
     die6Button.addButtonListener(manualDieButton);
   }
 
+
   private int getDieValue() {
+    //let die get the value as die_value required
+    int playerIndex = nbRolls % gp.getNumberOfPlayers();
     if (dieValues == null) {
       return RANDOM_ROLL_TAG;
+
+    }else if(dieValues.get(playerIndex) == null){
+
+      return RANDOM_ROLL_TAG;
+    } else{
+
+      return dieValues.get(playerIndex).remove(0);
     }
-    int currentRound = nbRolls / gp.getNumberOfPlayers();
-    int playerIndex = nbRolls % gp.getNumberOfPlayers();
-    if (dieValues.get(playerIndex).size() > currentRound) {
-      return dieValues.get(playerIndex).get(currentRound);
-    }
-    return RANDOM_ROLL_TAG;
+
   }
 
   void createGui()
@@ -375,6 +381,8 @@ public class NavigationPane extends GameGrid
     System.out.println("hand button clicked");
     prepareBeforeRoll();
     roll(getDieValue());
+
+
   }
 
   private void roll(int rollNumber)
