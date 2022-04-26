@@ -41,4 +41,16 @@ public abstract class Connection
   public double yLocationPercent(int locationCell) {
     return (double) locationCell / GamePane.NUMBER_VERTICAL_CELLS;
   }
+
+
+  // reverse all property of the connection and inherit to the snake and ladder
+  public void doReverse(){
+    int tempCell = this.cellStart;
+    cellStart = cellEnd;
+    cellEnd = tempCell;
+    Location tempLoc = locStart;
+    locStart = locEnd;
+    locEnd = tempLoc;
+  }
+
 }

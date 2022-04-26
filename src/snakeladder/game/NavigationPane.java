@@ -7,6 +7,7 @@ import snakeladder.game.custom.CustomGGButton;
 import snakeladder.utility.ServicesRandom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 @SuppressWarnings("serial")
@@ -86,9 +87,8 @@ public class NavigationPane extends GameGrid
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
   private boolean checking_if_back;
-
-
-  private int numOfDice;
+  private AutoToggle autoToggle;
+  private final int numOfDice;
 
   int getNumOfDice(){
     return numOfDice;
@@ -114,6 +114,12 @@ public class NavigationPane extends GameGrid
     setNbVertCells(600);
     doRun();
     new SimulatedPlayer().start();
+  }
+  // get the dice count for the recorder and autoToggle function
+  int getDiceCount(){
+    return (properties.getProperty("dice.count") == null)
+            ? 1  // default
+            : Integer.parseInt(properties.getProperty("dice.count"));
   }
 
   void setupDieValues() {
@@ -189,7 +195,6 @@ public class NavigationPane extends GameGrid
     die5Button.addButtonListener(manualDieButton);
     die6Button.addButtonListener(manualDieButton);
   }
-
 
   private int getDieValue() {
     //let die get the value as die_value required
@@ -295,6 +300,10 @@ public class NavigationPane extends GameGrid
       for (Puppet puppet: gp.getAllPuppets()) {
         playerPositions.add(puppet.getCellIndex() + "");
       }
+      // print the whole game data at end of the game
+      for(Puppet puppet : gp.getAllPuppets()){
+        System.out.println(puppet.toString());
+      }
       gamePlayCallback.finishGameWithResults(nbRolls % gp.getNumberOfPlayers(), playerPositions);
       gp.resetAllPuppets();
     }
@@ -306,7 +315,10 @@ public class NavigationPane extends GameGrid
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
       showResult(result);
-
+      if((isToggle && !gp.isReversed()) || (!isToggle && gp.isReversed())){
+        gp.reverseAllConnections();
+      }
+      gp.getPuppet().autoToggle();
       //loop for all puppet
       for(Puppet p : gp.getAllPuppets()){
         if(i != currPuppetIndex){
@@ -387,8 +399,6 @@ public class NavigationPane extends GameGrid
     System.out.println("hand button clicked");
     prepareBeforeRoll();
     roll(getDieValue());
-
-
   }
 
   private void roll(int rollNumber)
@@ -416,5 +426,17 @@ public class NavigationPane extends GameGrid
 
   public void checkAuto() {
     if (isAuto) Monitor.wakeUp();
+  }
+
+  public boolean isToggle(){
+    return isToggle;
+  }
+
+  public void setToggle(boolean isToggle){
+    this.isToggle = isToggle;
+  }
+
+  public GGCheckButton isToggleCheck(){
+    return toggleCheck;
   }
 }

@@ -14,15 +14,18 @@ public class Puppet extends Actor
   private int dy;
   private boolean isAuto;
   private String puppetName;
-
+  // save game data in the puppet class
+  private Recorder playerData;
+  private AutoToggle autoToggle = new AutoToggle();
   private boolean isLowest  = false;
-
+  private boolean isBack = false;
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
     super(puppetImage);
     this.gamePane = gp;
     this.navigationPane = np;
+    this.playerData = new Recorder(np.getDiceCount());
   }
 
   public boolean isAuto() {
@@ -49,10 +52,16 @@ public class Puppet extends Actor
       cellIndex = 0;
       setLocation(gamePane.startLocation);
     }
-    checkLowest(nbSteps);
+    this.nbSteps = nbSteps;
+    playerData.count(nbSteps);
+
+    if(nbSteps == navigationPane.getNumOfDice()){
+      isLowest = true;
+    }else{
+      isLowest = false;
+    }
     setActEnabled(true);
   }
-
 
   void resetToStartingPoint() {
     cellIndex = 0;
@@ -76,10 +85,6 @@ public class Puppet extends Actor
     return cellIndex;
   }
 
-  /*
-
-  //no need to use this method
-
   private void moveToNextCell()
   {
     int tens = cellIndex / 10;
@@ -100,10 +105,8 @@ public class Puppet extends Actor
     }
     cellIndex++;
   }
-  */
 
-
-   private void movingToCell(int nbSteps){
+   public void movingToCell(int nbSteps){
     //updating the new location
      int new_nbSteps;
      if(nbSteps > 0){
@@ -197,12 +200,18 @@ public class Puppet extends Actor
             dy = gamePane.animationStep;
           else
             dy = -gamePane.animationStep;
-          if (currentCon instanceof Snake) {
+          /* because we have reverse function, we need to check if is reversed and record the connection is up or down
+             and save in variable recorder.
+          * */
+          if (currentCon instanceof Snake && !gamePane.isReversed() || (currentCon instanceof Ladder && gamePane.isReversed()))
+          {
             navigationPane.showStatus("Digesting...");
             navigationPane.playSound(GGSound.MMM);
+            playerData.isDown();
           } else {
             navigationPane.showStatus("Climbing...");
             navigationPane.playSound(GGSound.BOING);
+            playerData.isUp();
           }
         }
         else
@@ -212,6 +221,18 @@ public class Puppet extends Actor
         }
       }
     }
+  }
+
+  public void autoToggle(){
+    if(isAuto){
+      autoToggle.autoToggle(navigationPane, gamePane);
+    }
+  }
+
+  @Override
+  public String toString(){
+    return puppetName + " rolled: " + playerData.rollData() + "\n"
+            + puppetName + " traversed: " + playerData.traversalData();
   }
 
 }
