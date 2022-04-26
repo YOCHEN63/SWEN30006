@@ -324,10 +324,6 @@ public class NavigationPane extends GameGrid
 
             p.go(-1);
             checking_if_back = true;
-            // check auto individually to do the reverse, make code easy to make change
-            if(isAuto){
-              autoToggle.autoToggle(numOfDice,gp,isToggle,toggleCheck);
-            }
             // switch to next puppet
             gp.switchToNextPuppet();
             if (isAuto) {
@@ -418,5 +414,17 @@ public class NavigationPane extends GameGrid
 
   public void checkAuto() {
     if (isAuto) Monitor.wakeUp();
+  }
+
+  public boolean isToggle(){
+    return isToggle;
+  }
+
+  public void setToggle(boolean isToggle){
+    this.isToggle = isToggle;
+  }
+
+  public GGCheckButton isToggleCheck(){
+    return toggleCheck;
   }
 }

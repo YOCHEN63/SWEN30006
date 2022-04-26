@@ -16,6 +16,7 @@ public class Puppet extends Actor
   private String puppetName;
   // save game data in the puppet class
   private Recorder playerData;
+  private AutoToggle autoToggle = new AutoToggle();
   private boolean isLowest  = false;
   private boolean isBack = false;
 
@@ -179,6 +180,8 @@ public class Puppet extends Actor
 
       if (nbSteps == 0)
       {
+        // check auto individually to do the reverse, make code easy to make change
+
 
         // Check if on connection start
         if ((currentCon = gamePane.getConnectionAt(getLocation())) != null && checkDownForSnake())
@@ -207,6 +210,9 @@ public class Puppet extends Actor
         }
         else
         {
+          if(isAuto){
+            autoToggle.autoToggle(navigationPane, gamePane);
+          }
           setActEnabled(false);
           navigationPane.prepareRoll(cellIndex);
         }
