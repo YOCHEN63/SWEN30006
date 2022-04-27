@@ -18,7 +18,6 @@ public class Puppet extends Actor
   private Recorder playerData;
   private AutoToggle autoToggle = new AutoToggle();
   private boolean isLowest  = false;
-  private boolean isBack = false;
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
@@ -73,13 +72,6 @@ public class Puppet extends Actor
     this.nbSteps = nbSteps;
   }
 
-  void checkLowest(int nbSteps){
-    if(nbSteps == navigationPane.getNumOfDice()){
-      this.isLowest = true;
-    }else{
-      this.isLowest = false;
-    }
-  }
 
   int getCellIndex() {
     return cellIndex;

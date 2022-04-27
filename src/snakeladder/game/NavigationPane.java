@@ -7,7 +7,6 @@ import snakeladder.game.custom.CustomGGButton;
 import snakeladder.utility.ServicesRandom;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Properties;
 
 @SuppressWarnings("serial")
@@ -86,8 +85,7 @@ public class NavigationPane extends GameGrid
   private Properties properties;
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
-  private boolean checking_if_back;
-  private AutoToggle autoToggle;
+  private boolean checkIfBack;
   private final int numOfDice;
 
   int getNumOfDice(){
@@ -328,7 +326,7 @@ public class NavigationPane extends GameGrid
 
             p.go(-1);
 
-            checking_if_back = true;
+            checkIfBack = true;
             // switch to next puppet
             gp.switchToNextPuppet();
             if (isAuto) {
@@ -348,7 +346,7 @@ public class NavigationPane extends GameGrid
       }
 
 
-      if(checking_if_back == false){
+      if(checkIfBack == false){
         //if current puppet has not resulted in any other puppet
         //goes back , then move normally
         gp.switchToNextPuppet();
@@ -376,7 +374,7 @@ public class NavigationPane extends GameGrid
     showScore("# Rolls: " + (++nbRolls));
     //reset the checking_if_back value into false at each roll
     //thus, it won't interrupt next roll
-    checking_if_back = false;
+    checkIfBack = false;
     gp.getPuppet().go(nb);
   }
 
